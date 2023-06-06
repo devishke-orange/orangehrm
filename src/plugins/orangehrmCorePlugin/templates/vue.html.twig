@@ -38,6 +38,7 @@
         help-url="{{ helpUrl }}"
         :show-upgrade="{{ showUpgrade }}"
     >
+      <on-demand></on-demand>
       <{{ componentName }}
       {% for prop in componentProps %}
         :{{ prop.getName() }}="{{ prop.getValue() }}"
