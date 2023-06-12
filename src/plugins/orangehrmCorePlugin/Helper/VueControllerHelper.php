@@ -64,8 +64,8 @@ class VueControllerHelper
     public const CLIENT_BANNER_URL = 'clientBannerUrl';
     public const THEME_VARIABLES = 'themeVariables';
     public const HELP_URL = 'helpUrl';
-    public const REMAINING_DAYS = 'remainingDays';
-    public const SUBSCRIBE_STATUS =  'subscribeStatus';
+    public const REMAINING_DAYS = 'remainingDays'; //related to on-demand
+    public const SUBSCRIBE_STATUS =  'subscribeStatus'; //related to on-demand
 
     /**
      * @var Request|null
@@ -297,6 +297,7 @@ class VueControllerHelper
             . $this->getCurrentModuleAndScreen()->getScreen();
     }
 
+    //below code is related to free trial/on-demand
     /**
      * @return string
      */
@@ -306,6 +307,7 @@ class VueControllerHelper
         return $freeTrialService->getRemainingDays();
     }
 
+    //below code is related to free trial/on-demand
     /**
      * @return bool
      */
