@@ -3,3 +3,9 @@ node_modules
 cypress/screenshots
 cypress/fixtures/admin.json
 cypress.json
+
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
