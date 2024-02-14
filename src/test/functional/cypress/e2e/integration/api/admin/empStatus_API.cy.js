@@ -41,14 +41,17 @@ describe('Admin - Employment Status API ', function () {
 
   describe('With `emp-statuses` snapshot', function () {
     before(function () {
-      cy.task('db:reset');
+      cy.task('db:truncate', {tables: ['EmploymentStatus']});
       cy.fixture('user').then(({admin}) => {
         cy.apiLogin(admin);
       });
       cy.request('POST', empStatusAPI, {
         name: this.strings.chars50.text,
       }).then(function () {
-        cy.task('db:snapshot', {name: 'emp-statuses'});
+        cy.task('db:snapshotSpecific', {
+          savepointName: 'emp-statuses',
+          tables: ['ohrm_employment_status'],
+        });
       });
     });
 
@@ -60,7 +63,7 @@ describe('Admin - Employment Status API ', function () {
 
     describe('GET /emp-status ', function () {
       it('get all employment status:empty', function () {
-        cy.task('db:reset');
+        cy.task('db:truncate', {tables: ['EmploymentStatus']});
         cy.request('GET', empStatusAPI).then((response) => {
           expect(response.status).to.eq(200);
           expect(response.body.data.length).to.eq(0);
@@ -69,7 +72,10 @@ describe('Admin - Employment Status API ', function () {
       });
 
       it('get all employment status', function () {
-        cy.task('db:restore', {name: 'emp-statuses'});
+        cy.task('db:restoreSpecific', {
+          savepointName: 'emp-statuses',
+          tables: ['ohrm_employment_status'],
+        });
         cy.request('GET', empStatusAPI).then((response) => {
           expect(response.status).to.eq(200);
           expect(response.body.data.length).to.eq(1);
@@ -79,7 +85,10 @@ describe('Admin - Employment Status API ', function () {
       });
 
       it('get one employment status', function () {
-        cy.task('db:restore', {name: 'emp-statuses'});
+        cy.task('db:restoreSpecific', {
+          savepointName: 'emp-statuses',
+          tables: ['ohrm_employment_status'],
+        });
         cy.request('GET', empStatusAPI + '/1').then((response) => {
           expect(response.status).to.eq(200);
           expect(response.body.data.name).to.eq(this.strings.chars50.text);
@@ -89,7 +98,10 @@ describe('Admin - Employment Status API ', function () {
 
     describe('DELETE /emp-status', function () {
       it('delete all employment status', function () {
-        cy.task('db:restore', {name: 'emp-statuses'});
+        cy.task('db:restoreSpecific', {
+          savepointName: 'emp-statuses',
+          tables: ['ohrm_employment_status'],
+        });
         cy.request('GET', empStatusAPI)
           .then((response) => {
             expect(response.status).to.eq(200);
@@ -104,7 +116,10 @@ describe('Admin - Employment Status API ', function () {
       });
 
       it('delete one employment status', function () {
-        cy.task('db:restore', {name: 'emp-statuses'});
+        cy.task('db:restoreSpecific', {
+          savepointName: 'emp-statuses',
+          tables: ['ohrm_employment_status'],
+        });
         cy.request('DELETE', empStatusAPI, {ids: [1]}).then((response) => {
           expect(response.status).to.eq(200);
           expect(response.body.data).to.deep.eq([1]);
@@ -114,7 +129,10 @@ describe('Admin - Employment Status API ', function () {
 
     describe('PUT /emp-status', function () {
       it('update an employment status', function () {
-        cy.task('db:restore', {name: 'emp-statuses'});
+        cy.task('db:restoreSpecific', {
+          savepointName: 'emp-statuses',
+          tables: ['ohrm_employment_status'],
+        });
         cy.request('PUT', empStatusAPI + '/1', {name: 'test'}).then(
           (response) => {
             expect(response.status).to.eq(200);

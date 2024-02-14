@@ -17,7 +17,7 @@
 
 describe('Admin - Job Titles', function () {
   beforeEach(function () {
-    cy.task('db:reset');
+    cy.task('db:truncate', {tables: ['JobTitle']});
     cy.fixture('chars').as('strings');
     cy.intercept('GET', '**/api/v2/admin/job-titles?*').as('getJobTitles');
     cy.intercept('POST', '**/api/v2/admin/job-titles').as('postJobTitles');
@@ -49,11 +49,17 @@ describe('Admin - Job Titles', function () {
       });
       cy.wait('@postJobTitles');
       cy.toast('success', 'Successfully Saved');
-      cy.task('db:snapshot', {name: 'jobTitle'});
+      cy.task('db:snapshotSpecific', {
+        savepointName: 'jobTitle',
+        tables: ['ohrm_job_title'],
+      });
     });
 
     it('add job title form validations should work', function () {
-      cy.task('db:restore', {name: 'jobTitle'});
+      cy.task('db:restoreSpecific', {
+        savepointName: 'jobTitle',
+        tables: ['ohrm_job_title'],
+      });
       cy.loginTo(this.user, '/admin/saveJobTitle');
       cy.getOXD('form').within(() => {
         cy.getOXDInput('Job Title')

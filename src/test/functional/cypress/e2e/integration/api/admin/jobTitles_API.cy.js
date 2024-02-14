@@ -19,7 +19,7 @@ const jobTitlesApi = `/api/v2/admin/job-titles`;
 
 describe('Admin - Job Title API', function () {
   beforeEach(function () {
-    cy.task('db:reset');
+    cy.task('db:truncate', {tables: ['JobTitle']});
     cy.fixture('chars').as('strings');
     cy.fixture('user').then(({admin}) => {
       cy.apiLogin(admin);

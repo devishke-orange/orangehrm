@@ -17,7 +17,6 @@
 
 describe('Core - Login Page', function () {
   before(function () {
-    cy.task('db:reset');
     cy.intercept('POST', '**/auth/validate').as('postLogin');
     cy.fixture('user').then(({admin}) => {
       this.user = admin;

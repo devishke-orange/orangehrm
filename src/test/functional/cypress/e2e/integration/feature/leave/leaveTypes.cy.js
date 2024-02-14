@@ -17,7 +17,7 @@
 
 describe('Leave - leave types', function () {
   beforeEach(function () {
-    cy.task('db:reset');
+    cy.task('db:truncate', {tables: 'LeaveType'});
     cy.fixture('chars').as('strings');
     cy.intercept('GET', '**/api/v2/leave/leave-types*').as('getLeaveTypes');
     cy.intercept('POST', '**/api/v2/leave/leave-types').as('saveLeaveType');
@@ -44,7 +44,10 @@ describe('Leave - leave types', function () {
         cy.getOXD('button').contains('Save').click();
       });
       cy.wait('@saveLeaveType').then(function () {
-        cy.task('db:snapshot', {name: 'leaveTypes'});
+        cy.task('db:snapshotSpecific', {
+          name: 'leaveTypes',
+          tables: ['ohrm_leave_type'],
+        });
       });
     });
   });
@@ -71,7 +74,10 @@ describe('Leave - leave types', function () {
     });
 
     it('add leave type form validations', function () {
-      cy.task('db:restore', {name: 'leaveTypes'});
+      cy.task('db:restoreSpecific', {
+        name: 'leaveTypes',
+        tables: ['ohrm_leave_type'],
+      });
       cy.loginTo(this.user, '/leave/defineLeaveType');
       cy.getOXD('form').within(() => {
         cy.getOXDInput('Name').then(($input) => {
@@ -88,7 +94,10 @@ describe('Leave - leave types', function () {
 
   describe('update leave type', function () {
     it('update leave type', function () {
-      cy.task('db:restore', {name: 'leaveTypes'});
+      cy.task('db:restoreSpecific', {
+        name: 'leaveTypes',
+        tables: ['ohrm_leave_type'],
+      });
       cy.loginTo(this.user, '/leave/leaveTypeList');
       cy.wait('@getLeaveTypes');
       cy.get(
@@ -108,7 +117,10 @@ describe('Leave - leave types', function () {
 
   describe('delete leave type', function () {
     it('delete leave type', function () {
-      cy.task('db:restore', {name: 'leaveTypes'});
+      cy.task('db:restoreSpecific', {
+        name: 'leaveTypes',
+        tables: ['ohrm_leave_type'],
+      });
       cy.loginTo(this.user, '/leave/leaveTypeList');
       cy.get(
         '.oxd-table-body > :nth-child(1) .oxd-table-cell-actions > :nth-child(1)',

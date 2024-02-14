@@ -41,6 +41,24 @@ module.exports = defineConfig({
       };
 
       /**
+       * Creates a savepoint of DB table
+       * @param {String} savepointName
+       * @param {Array<String>} tableNames
+       * @returns {AxiosResponse | error}
+       */
+      const createSpecificSavePoint = async (savepointName, tableNames) => {
+        return await asyncWrapper(
+          axios.post(
+            `${testingApiEndpoint}/database/create-specific-savepoint`,
+            {
+              savepointName,
+              tableNames,
+            },
+          ),
+        );
+      };
+
+      /**
        * Restore the DB to defined savepoint
        * @param {String} savepointName
        * @returns {AxiosResponse | error}
@@ -50,6 +68,24 @@ module.exports = defineConfig({
           axios.post(`${testingApiEndpoint}/database/restore-to-savepoint`, {
             savepointName,
           }),
+        );
+      };
+
+      /**
+       * Restore the DB to defined savepoint
+       * @param {String} savepointName
+       * @param {Array<String>} tableNames
+       * @returns {AxiosResponse | error}
+       */
+      const restoreSpecificSavePoint = async (savepointName, tableNames) => {
+        return await asyncWrapper(
+          axios.post(
+            `${testingApiEndpoint}/database/restore-to-specific-savepoint`,
+            {
+              savepointName,
+              tableNames,
+            },
+          ),
         );
       };
 
@@ -100,8 +136,22 @@ module.exports = defineConfig({
           const [response] = await createSavePoint(payload.name);
           return response ? response.data : undefined;
         },
+        async 'db:snapshotSpecific'(payload) {
+          const [response] = await createSpecificSavePoint(
+            payload.savepointName,
+            payload.tables,
+          );
+          return response ? response.data : undefined;
+        },
         async 'db:restore'(payload) {
           const [response] = await restoreToSavePoint(payload.name);
+          return response ? response.data : undefined;
+        },
+        async 'db:restoreSpecific'(payload) {
+          const [response] = await restoreSpecificSavePoint(
+            payload.savepointName,
+            payload.tables,
+          );
           return response ? response.data : undefined;
         },
         async 'db:clearSnapshots'(payload) {

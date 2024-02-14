@@ -241,4 +241,89 @@ class DatabaseBackupService
         return $this->getCache()->clear(self::DB_SAVEPOINT_CACHE_KEY_PREFIX) &&
             $this->getCache()->clear(self::INITIAL_SAVEPOINT_CACHE_KEY_PREFIX);
     }
+
+    /**
+     * @param string $savepointName
+     * @param string[] $tableNames
+     */
+    public function createSpecificSavepoint(string $savepointName, array $tableNames): void
+    {
+        $this->_createSpecificSavepoint($this->genSavepointCacheKeyPrefix($savepointName), $tableNames);
+    }
+
+    /**
+     * @param string $savepointCacheKeyPrefix
+     * @param string[] $tableNames
+     */
+    private function _createSpecificSavepoint(string $savepointCacheKeyPrefix, array $tableNames): void
+    {
+        $conn = $this->getConnection();
+
+        foreach ($tableNames as $tableName) {
+            $results = $conn->fetchAllAssociative("SELECT * FROM `$tableName`");
+
+            /** @var CacheItem $cacheItem */
+            $cacheItem = $this->getCache()->getItem($this->genSavepointCacheKey($savepointCacheKeyPrefix, $tableName));
+            if ($cacheItem->isHit()) {
+                throw new Exception('Savepoint already created for the given name');
+            }
+
+            $this->getCache()->get(
+                $this->genSavepointCacheKey($savepointCacheKeyPrefix, $tableName),
+                function () use ($tableName, $results) {
+                    return ['tableName' => $tableName, 'data' => $results];
+                }
+            );
+
+            /** @var CacheItem $cacheItem */
+            $cacheItem = $this->getCache()->getItem($this->genSavepointCacheKey($savepointCacheKeyPrefix, $tableName));
+            if (!$cacheItem->isHit()) {
+                throw new Exception('Savepoint creation failed');
+            }
+        }
+    }
+
+    /**
+     * @param string $savepointName
+     * @param string[] $tableNames
+     */
+    public function restoreSpecificSavepoint(string $savepointName, array $tableNames): void
+    {
+        $this->getAppCache()->clear();
+        $this->_restoreSpecificSavepoint($this->genSavepointCacheKeyPrefix($savepointName), $tableNames);
+    }
+
+    /**
+     * @param string $savepointCacheKeyPrefix
+     * @param string[] $tableNames
+     */
+    private function _restoreSpecificSavepoint(string $savepointCacheKeyPrefix, array $tableNames): void
+    {
+        $conn = $this->getConnection();
+        $conn->executeStatement('SET FOREIGN_KEY_CHECKS=0;');
+        try {
+            foreach ($tableNames as $tableName) {
+                /** @var CacheItem $cacheItem */
+                $cacheItem = $this->getCache()->getItem(
+                    $this->genSavepointCacheKey($savepointCacheKeyPrefix, $tableName)
+                );
+                if (!$cacheItem->isHit()) {
+                    throw new Exception('No savepoint for the given name');
+                }
+
+                $conn->executeStatement("DELETE FROM `$tableName`");
+                $conn->executeStatement("ALTER TABLE `$tableName` AUTO_INCREMENT = 1");
+                $data = $cacheItem->get()['data'];
+                foreach ($data as $row) {
+                    $conn->insert($tableName, $row);
+                }
+            }
+        } catch (Exception $e) {
+            $this->getLogger()->error($e->getMessage());
+            $this->getLogger()->error($e->getTraceAsString());
+            throw $e;
+        } finally {
+            $conn->executeStatement('SET FOREIGN_KEY_CHECKS=1;');
+        }
+    }
 }

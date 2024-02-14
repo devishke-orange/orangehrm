@@ -17,7 +17,7 @@
 
 describe('Admin - Employment Status', function () {
   beforeEach(function () {
-    cy.task('db:reset');
+    cy.task('db:truncate', {tables: ['EmploymentStatus']});
     cy.fixture('chars').as('strings');
     cy.intercept('GET', '**/api/v2/admin/employment-statuses*').as(
       'getEmpStatus',
@@ -52,7 +52,10 @@ describe('Admin - Employment Status', function () {
         cy.getOXD('button').contains('Save').click();
       });
       cy.wait('@postEmpStatus').then(function () {
-        cy.task('db:snapshot', {name: 'empStatus'});
+        cy.task('db:snapshotSpecific', {
+          savepointName: 'emp-statuses-ui',
+          tables: ['ohrm_employment_status'],
+        });
       });
     });
   });
@@ -79,7 +82,10 @@ describe('Admin - Employment Status', function () {
     });
 
     it('add emp status form validations', function () {
-      cy.task('db:restore', {name: 'empStatus'});
+      cy.task('db:restoreSpecific', {
+        savepointName: 'emp-statuses-ui',
+        tables: ['ohrm_employment_status'],
+      });
       cy.loginTo(this.user, '/admin/saveEmploymentStatus');
       cy.getOXD('form').within(() => {
         cy.getOXDInput('Name').then(($input) => {
@@ -96,7 +102,10 @@ describe('Admin - Employment Status', function () {
 
   describe('update emp status', function () {
     it('update emp status', function () {
-      cy.task('db:restore', {name: 'empStatus'});
+      cy.task('db:restoreSpecific', {
+        savepointName: 'emp-statuses-ui',
+        tables: ['ohrm_employment_status'],
+      });
       cy.loginTo(this.user, '/admin/employmentStatus');
       cy.wait('@getEmpStatus');
       cy.get(
@@ -116,7 +125,10 @@ describe('Admin - Employment Status', function () {
 
   describe('delete emp status', function () {
     it('delete emp status', function () {
-      cy.task('db:restore', {name: 'empStatus'});
+      cy.task('db:restoreSpecific', {
+        savepointName: 'emp-statuses-ui',
+        tables: ['ohrm_employment_status'],
+      });
       cy.loginTo(this.user, '/admin/employmentStatus');
       cy.wait('@getEmpStatus');
       cy.get(

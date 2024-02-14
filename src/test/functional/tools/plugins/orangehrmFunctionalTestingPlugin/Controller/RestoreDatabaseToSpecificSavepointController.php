@@ -1,3 +1,4 @@
+<?php
 /**
  * OrangeHRM is a comprehensive Human Resource Management (HRM) System that captures
  * all the essential functionalities required for any enterprise.
@@ -15,21 +16,25 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-describe('Admin - Job Titles', function () {
-  beforeEach(function () {
-    cy.task('db:truncate', {tables: ['JobTitle']});
-    cy.intercept('GET', '**/api/v2/admin/job-titles?*').as('getJobTitles');
-    cy.fixture('user').then(({admin}) => {
-      this.user = admin;
-    });
-  });
+namespace OrangeHRM\FunctionalTesting\Controller;
 
-  it('Job Title List page should correctly render screen', function () {
-    cy.loginTo(this.user, '/admin/viewJobTitleList');
-    cy.wait('@getJobTitles');
-    cy.getOXD('pageContext').within(() => {
-      cy.getOXD('pageTitle').should('include.text', 'Job Titles');
-      cy.getOXD('button').should('include.text', 'Add');
-    });
-  });
-});
+use OrangeHRM\Core\Controller\PublicControllerInterface;
+use OrangeHRM\Framework\Http\Request;
+use OrangeHRM\Framework\Http\Response;
+
+class RestoreDatabaseToSpecificSavepointController extends AbstractController implements PublicControllerInterface
+{
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function handle(Request $request): Response
+    {
+        $savepointName = $request->request->get('savepointName');
+        $tableNames = $request->request->get('tableNames', []);
+        $this->getDatabaseBackupService()->restoreSpecificSavepoint($savepointName, $tableNames);
+        $response = $this->getResponse();
+        $response->setContent(json_encode(['count' => count($tableNames)]));
+        return $response;
+    }
+}

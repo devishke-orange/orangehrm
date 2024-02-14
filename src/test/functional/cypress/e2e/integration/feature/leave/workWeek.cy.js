@@ -16,8 +16,18 @@
  */
 
 describe('Leave- Configure - Work Week', function () {
+  before(function () {
+    cy.task('db:snapshotSpecific', {
+      savepointName: 'work-week',
+      tables: ['ohrm_work_week'],
+    });
+  });
+
   beforeEach(function () {
-    cy.task('db:reset');
+    cy.task('db:restoreSpecific', {
+      savepointName: 'work-week',
+      tables: ['ohrm_work_week'],
+    });
     cy.fixture('viewport').then(({HD}) => {
       cy.viewport(HD.width, HD.height);
     });

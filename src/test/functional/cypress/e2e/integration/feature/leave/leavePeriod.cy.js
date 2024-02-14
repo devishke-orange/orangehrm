@@ -18,8 +18,18 @@
 import user from '../../../../fixtures/user.json';
 
 describe('Leave - Leave Period', function () {
+  before(function () {
+    cy.task('db:snapshotSpecific', {
+      savepointName: 'leave-period',
+      tables: ['ohrm_leave_period_history', 'hs_hr_config'],
+    });
+  });
+
   beforeEach(function () {
-    cy.task('db:reset');
+    cy.task('db:restoreSpecific', {
+      savepointName: 'leave-period',
+      tables: ['ohrm_leave_period_history', 'hs_hr_config'],
+    });
     cy.fixture('viewport').then(({HD}) => {
       cy.viewport(HD.width, HD.height);
     });
@@ -95,10 +105,16 @@ describe('Leave - Leave Period', function () {
       });
       cy.wait('@updateLeavePeriod');
       cy.toast('success', 'Successfully Saved');
-      cy.task('db:snapshot', {name: 'leavePeriodSaved2'});
+      cy.task('db:snapshotSpecific', {
+        savepointName: 'leavePeriodSaved2',
+        tables: ['ohrm_leave_period_history', 'hs_hr_config'],
+      });
     });
     it('Verify Reset button Function ', function () {
-      cy.task('db:restore', {name: 'leavePeriodSaved2'});
+      cy.task('db:restoreSpecific', {
+        savepointName: 'leavePeriodSaved2',
+        tables: ['ohrm_leave_period_history', 'hs_hr_config'],
+      });
       cy.loginTo(user.admin, '/leave/defineLeavePeriod');
       cy.wait('@retriveLeavePeriod');
       cy.getOXD('form').within(() => {

@@ -16,8 +16,14 @@
  */
 
 describe('Admin - Job Category', function () {
+  before(function () {
+    cy.task('db:snapshotSpecific', {
+      savepointName: 'job-category',
+      tables: ['ohrm_job_category'],
+    });
+  });
+
   beforeEach(function () {
-    cy.task('db:reset');
     cy.fixture('viewport').then(({HD}) => {
       cy.viewport(HD.width, HD.height);
     });
@@ -36,6 +42,13 @@ describe('Admin - Job Category', function () {
     );
     cy.fixture('user').then(({admin}) => {
       this.user = admin;
+    });
+  });
+
+  afterEach(function () {
+    cy.task('db:restoreSpecific', {
+      savepointName: 'job-category',
+      tables: ['ohrm_job_category'],
     });
   });
 

@@ -27,3 +27,13 @@ functional_testing_auth_validate:
   path: /functional-testing/auth/validate
   controller: OrangeHRM\FunctionalTesting\Controller\AuthValidateController::handle
   methods: [ POST ]
+
+functional_testing_create_specific_db_savepoint:
+  path: /functional-testing/database/create-specific-savepoint
+  controller: OrangeHRM\FunctionalTesting\Controller\CreateSpecificDatabaseSavepointController::handle
+  methods: [ POST ]
+
+functional_testing_restore_db_to_specific_savepoint:
+  path: /functional-testing/database/restore-to-specific-savepoint
+  controller: OrangeHRM\FunctionalTesting\Controller\RestoreDatabaseToSpecificSavepointController::handle
+  methods: [ POST ]
