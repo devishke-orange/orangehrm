@@ -230,9 +230,10 @@ class LocalizationService
         $root->setAttribute('srcLang', 'en_US');
         $root->setAttribute('trgLang', $language->getCode());
         $root->setAttribute('xmlns', 'urn:oasis:names:tc:xliff:document:2.0');
-        $root->setAttribute('date', @date('Y-m-d\TH:i:s\Z'));
+//        $root->setAttribute('date', @date('Y-m-d\TH:i:s\Z'));
 
         $file = $xml->createElement('file');
+        $file->setAttribute('id', 1);
         $root->appendChild($file);
 
         foreach ($i18nGroups as  $i18nGroup) {
@@ -246,7 +247,7 @@ class LocalizationService
 
                 $group = $xml->createElement('group');
                 $file->appendChild($group);
-                $group->setAttribute('name', $i18nGroup->getName());
+                $group->setAttribute('id', $i18nGroup->getName());
 
 
                 foreach ($translations as $translation) {
