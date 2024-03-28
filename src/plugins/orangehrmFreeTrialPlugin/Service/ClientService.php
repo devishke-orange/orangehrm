@@ -70,7 +70,7 @@ class ClientService
         }
         $createdDateTime = $this->getAuthUser()->getAttribute(ClientService::ON_DEMAND_ACCESS_TOKEN);
         $createdDateTimeInMinutes = strtotime($createdDateTime) / 60;
-        $timeDifference  = $createdDateTimeInMinutes - (strtotime($this->getDateTimeHelper()->getNow()->format('Y-m-d H:i:s'))/60);
+        $timeDifference  = $createdDateTimeInMinutes - (strtotime($this->getDateTimeHelper()->getNow()->format('Y-m-d H:i:s')) / 60);
 
         return $timeDifference <= self::TOKEN_VALID_TIME_PERIOD;
     }
