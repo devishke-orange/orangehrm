@@ -40,6 +40,7 @@ use OrangeHRM\DevTools\Command\AddRolePermissionCommand;
 use OrangeHRM\DevTools\Command\CreateTestDatabaseCommand;
 use OrangeHRM\DevTools\Command\EventDispatcherDebugCommand;
 use OrangeHRM\DevTools\Command\GenerateOpenApiDocCommand;
+use OrangeHRM\DevTools\Command\InsertPermanentBearerToken;
 use OrangeHRM\DevTools\Command\PHPFixCodingStandardsCommand;
 use OrangeHRM\DevTools\Command\ReInstallCommand;
 use OrangeHRM\DevTools\Command\ResetInstallationCommand;
@@ -60,6 +61,7 @@ $application->add(new ReInstallCommand());
 $application->add(new CreateTestDatabaseCommand());
 $application->add(new RunMigrationClassCommand());
 $application->add(new GenerateOpenApiDocCommand());
+$application->add(new InsertPermanentBearerToken());
 
 ServiceContainer::getContainer()->register(Services::DOCTRINE)
     ->setFactory([Doctrine::class, 'getEntityManager']);
