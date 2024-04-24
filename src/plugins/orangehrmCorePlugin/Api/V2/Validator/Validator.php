@@ -79,7 +79,7 @@ class Validator
      * @param ParamRuleCollection|null $rules
      * @return array
      */
-    private static function getOnlyNecessaryValues(array $values, ?ParamRuleCollection $rules = null): array
+    protected static function getOnlyNecessaryValues(array $values, ?ParamRuleCollection $rules = null): array
     {
         $excludedParamKeys = is_null($rules) ?
             ParamRuleCollection::DEFAULT_EXCLUDED_PARAM_KEYS :

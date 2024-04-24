@@ -69,7 +69,9 @@ class ApiAuthorizationSubscriber extends AbstractEventSubscriber
         }
         $permissions = $this->getUserRoleManager()->getApiPermissions($apiClass);
 
-        $permissionGetter = $this->getPermissionGetterMethod($event->getRequest()->getMethod());
+        $method = $event->getRequest()->getMethod();
+
+        $permissionGetter = $this->getPermissionGetterMethod('PATCH' === $method ? 'PUT' : $method);
         if (is_null($permissionGetter) || !$permissions->$permissionGetter()) {
             throw new ForbiddenException('Unauthorized');
         }

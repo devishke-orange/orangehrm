@@ -44,6 +44,8 @@ class Migration extends AbstractMigration
             ->setParameter('userRoleId', $this->getDataGroupHelper()->getUserRoleIdByName('Admin'))
             ->setParameter('value', 1)
             ->executeQuery();
+
+        $this->getDataGroupHelper()->insertApiPermissions(__DIR__ . '/permission/api.yaml');
     }
 
     /**

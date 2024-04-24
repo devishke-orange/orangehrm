@@ -60,4 +60,14 @@ class Request extends HttpRequest
         }
         return parent::createFromGlobals();
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected static function initializeFormats()
+    {
+        parent::initializeFormats();
+        // Add SCIM format
+        static::$formats['json'][] = 'application/scim+json';
+    }
 }

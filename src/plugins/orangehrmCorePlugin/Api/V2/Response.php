@@ -22,6 +22,7 @@ class Response
 {
     public const CONTENT_TYPE_KEY = 'Content-Type';
     public const CONTENT_TYPE_JSON = 'application/json';
+    public const CONTENT_TYPE_SCIM = 'application/scim+json';
     /**
      * @var array
      */

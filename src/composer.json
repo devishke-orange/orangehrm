@@ -65,6 +65,7 @@
             "OrangeHRM\\Authentication\\": "./plugins/orangehrmAuthenticationPlugin",
             "OrangeHRM\\Buzz\\": "./plugins/orangehrmBuzzPlugin",
             "OrangeHRM\\OAuth\\": "./plugins/orangehrmCoreOAuthPlugin",
+            "OrangeHRM\\Scim\\": "./plugins/orangehrmCoreScimPlugin",
             "OrangeHRM\\Core\\": "./plugins/orangehrmCorePlugin",
             "OrangeHRM\\CorporateDirectory\\": "./plugins/orangehrmCorporateDirectoryPlugin",
             "OrangeHRM\\Dashboard\\": "./plugins/orangehrmDashboardPlugin",

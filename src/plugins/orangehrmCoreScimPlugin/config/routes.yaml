@@ -1,0 +1,13 @@
+apiv2_core_scim_user:
+  path: /api/v2/scim/Users/{id}
+  controller: \OrangeHRM\Scim\Controller\ScimRestController::handle
+  methods: [ GET, PUT, PATCH, DELETE ]
+  defaults:
+    _api: OrangeHRM\Scim\Api\ScimUserAPI
+
+apiv2_core_scim_users:
+  path: /api/v2/scim/Users
+  controller: \OrangeHRM\Scim\Controller\ScimRestController::handle
+  methods: [ GET, POST ]
+  defaults:
+    _api: OrangeHRM\Scim\Api\ScimUserAPI

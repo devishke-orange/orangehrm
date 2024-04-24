@@ -1,0 +1,15 @@
+##########################
+#        Core
+##########################
+
+apiv2_core_scim_users:
+  description: "API v2 Core - SCIM Users"
+  api: OrangeHRM\Scim\Api\ScimUserAPI
+  module: core
+  allowed:
+    read: true
+    create: true
+    update: true
+    delete: true
+  permissions:
+    - { role: Admin, permission: { read: true, create: true, update: true, delete: true } }
