@@ -18,16 +18,16 @@
 
 use OrangeHRM\Authentication\Dto\UserCredential;
 use OrangeHRM\Config\Config;
-use OrangeHRM\Framework\Http\Request;
 use OrangeHRM\Framework\Http\Session\MemorySessionStorage;
 use OrangeHRM\Framework\Http\Session\Session;
 use OrangeHRM\Framework\ServiceContainer;
 use OrangeHRM\Framework\Services;
-use OrangeHRM\Installer\Controller\Installer\Api\InstallerDataRegistrationAPI;
 use OrangeHRM\Installer\Framework\HttpKernel;
 use OrangeHRM\Installer\Util\AppSetupUtility;
 use OrangeHRM\Installer\Util\StateContainer;
 use Symfony\Component\Yaml\Yaml;
+use OrangeHRM\Framework\Http\Request;
+use OrangeHRM\Installer\Controller\Installer\Api\InstallerDataRegistrationAPI;
 
 $pathToAutoload = realpath(__DIR__ . '/../src/vendor/autoload.php');
 
