@@ -20,7 +20,10 @@
 namespace OrangeHRM\FreeTrial\Controller;
 
 use OrangeHRM\Admin\Service\CountryService;
+use OrangeHRM\Authentication\Controller\ForbiddenController;
 use OrangeHRM\Core\Controller\AbstractVueController;
+use OrangeHRM\Core\Controller\Exception\RequestForwardableException;
+use OrangeHRM\Core\Traits\Auth\AuthUserTrait;
 use OrangeHRM\Core\Traits\ServiceContainerTrait;
 use OrangeHRM\Core\Vue\Component;
 use OrangeHRM\Core\Vue\Prop;
@@ -31,6 +34,7 @@ use OrangeHRM\FreeTrial\Service\FreeTrialService;
 class FreeTrialController extends AbstractVueController
 {
     use ServiceContainerTrait;
+    use AuthUserTrait;
 
     /**
      * @var FreeTrialService|null
@@ -70,6 +74,10 @@ class FreeTrialController extends AbstractVueController
      */
     public function preRender(Request $request): void
     {
+        if ($this->getAuthUser()->getUserRoleId() !== 1) {
+            throw new RequestForwardableException(ForbiddenController::class . '::handle');
+        }
+
         $component = new Component('subscribe-free-hosting');
         $currentURL = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $instanceUrl = rtrim($currentURL, '/trial/subscribeFreeHosting');

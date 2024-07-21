@@ -20,7 +20,7 @@
 -->
 
 <template>
-  <div v-if="!isSubscribed">
+  <div v-if="showRemainingDays">
     <oxd-sheet :gutters="false" type="gray-lighten-2">
       <div class="orangehrm-free-trial">
         <div class="orangehrm-free-trial-logo">
@@ -69,9 +69,9 @@ export default {
       type: String,
       default: '0',
     },
-    isSubscribed: {
+    showRemainingDays: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   data() {

@@ -66,9 +66,9 @@ class VueControllerHelper
     public const CLIENT_BANNER_URL = 'clientBannerUrl';
     public const THEME_VARIABLES = 'themeVariables';
     public const HELP_URL = 'helpUrl';
-    public const REMAINING_DAYS = 'remainingDays'; //related to on-demand
-    public const SUBSCRIBE_STATUS =  'subscribeStatus'; //related to on-demand
     public const SHOW_UPGRADE = 'showUpgrade';
+    public const REMAINING_DAYS = 'remainingDays'; //related to on-demand
+    public const SHOW_REMAINING_DAYS =  'showRemainingDays'; //related to on-demand
 
     /**
      * @var Request|null
@@ -155,9 +155,9 @@ class VueControllerHelper
                 self::CLIENT_BANNER_URL => $clientBannerUrl,
                 self::THEME_VARIABLES => $themeVariables,
                 self::HELP_URL => $this->getHelpUrl(),
+                self::SHOW_UPGRADE => $this->getAuthUser()->getUserRoleId() === 1,
                 self::REMAINING_DAYS => $this->getRemainingDates(),
-                self::SUBSCRIBE_STATUS => $this->getSubscribeStatus(),
-                self::SHOW_UPGRADE => $this->getAuthUser()->getUserRoleId() === 1
+                self::SHOW_REMAINING_DAYS => $this->getAuthUser()->getUserRoleId() === 1 && !$this->getSubscribeStatus(),
             ]
         );
         return $this->context->all();

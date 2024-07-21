@@ -24,7 +24,7 @@
   <div id="app">
     <on-demand
         remaining-days="{{ remainingDays }}"
-        :is-subscribed="{{ subscribeStatus | json_encode() }}"
+        :show-remaining-days="{{ showRemainingDays | json_encode() }}"
     ></on-demand>
     <oxd-layout
         home-url="https://www.orangehrm.com/"
@@ -51,7 +51,7 @@
     <template v-slot:footer>{% include 'copyright.html.twig' %}<br></template>
     </oxd-layout>
   </div>
-  {% if subscribeStatus == false %}
+  {% if showRemainingDays == true %}
     <style>
       .oxd-topbar {
         margin-top: 2.8rem;
